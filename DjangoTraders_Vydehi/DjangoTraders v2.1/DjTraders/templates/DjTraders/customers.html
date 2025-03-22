@@ -1,0 +1,207 @@
+<!-- tell the page to "use" the base template -->
+{% extends "base.html" %}
+
+<!-- define the block content to be injected -->
+
+{% block content %}
+
+<section id="SearchBar" class="small px-3 rounded-2 shadow" style="background-color: #f3e5f5;">
+    <form action="{% url 'DjTraders.Customers' %}">
+        <div class="navbar py-4">
+            <div class="nav">
+                <h5 class="ps-2 py-1">
+                    <i class="fa-solid fa-users fa-lg" style="color: steelblue;"></i>
+                    Search Customers By: {{ srchCustomerName }} {{ srchCountry }} {{ srchCity }} {{ srchContact }}
+                </h5>
+            </div>
+            <div class="nav d-flex flex-wrap">
+                <div class="mx-2 mb-3">
+                    <label style="font-weight: bold">Customer</label>
+                    <input type="text"
+                        class="form-control form-control-sm" 
+                        name="srchCustomerName" id="srchCustomerName" 
+                        placeholder="Enter Customer Name"
+                        value="{{ srchCustomerName }}">
+                </div>
+                <div class="mx-2 mb-3">
+                    <label style="font-weight: bold">Contact</label>
+                    <input type="text" 
+                        name="srchContactName" id="srchContactName" 
+                        class="form-control form-control-sm" 
+                        placeholder="Enter Contact Name"
+                        value="{{ srchContactName }}">
+                </div>
+                <div class="mx-2 mb-3">
+                    <label style="font-weight: bold">City</label>
+                    <select name="srchCity" id="srchCity"
+                        class="form-select form-select-sm"
+                        onchange="this.form.submit()">
+                        <option value="">Select City</option>
+                        {% for city in Cities %}
+                            <option value="{{ city.city }}"
+                                {% if city.city == srchCity %} selected="selected" {% endif %}>
+                                {{ city.city }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mx-2 mb-3">
+                    <label style="font-weight: bold">Country</label>
+                    <select name="srchCountry" id="srchCountry"
+                        class="form-select form-select-sm"
+                        onchange="this.form.submit()"> 
+                        <option value="">Select Country</option>
+                        {% for country in Countries %}
+                            <option value="{{ country.country }}"
+                                {% if country.country == srchCountry %} selected="selected" {% endif %}>
+                                {{ country.country }} 
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="nav"> 
+                <button class="btn btn-primary btn-sm mx-2" type="submit">
+                    <i class="fa-solid fa-magnifying-glass p-1"></i>
+                    Search
+                </button>
+                <button class="btn btn-outline-danger btn-sm mx-2" type="" onclick="resetingForm()">
+                    <i class="fa-solid fa-rotate" style="color: forestgreen"></i>
+                    Reset
+                </button>
+            </div>
+        </div>
+        <div class="navbar">
+           
+            <div class="ms-auto" style="display: flex; gap: 15px;">
+                <a href="{% url 'DjTraders.CustomerAdd' %}"
+           class="btn"
+           style="background-color: #20B2AA; color: white; cursor: pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px;"
+           title="Add a new Customer">
+            <i class="fa-solid fa-user-plus" style="color:white; margin-right: 8px;"></i>
+            Add a Customer
+        </a>
+
+        <a href="{% url 'DjTraders.CustomersJSON' %}"
+           class="text-dark text-decoration-none"
+           title="CustomerJSON"
+           style="cursor:pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; background-color: #20B2AA; color: white;">
+            <i class="fa-solid fa-file-alt" style="color:white; margin-right: 8px;"></i>
+            CustomerJSON
+        </a>
+
+        <a href="{% url 'DjTraders.TopCustomerOrders' %}"
+           class="text-dark text-decoration-none"
+           title="Customer Orders Placed"
+           style="cursor:pointer; display: flex; align-items: center; padding: 10px; border-radius: 5px; background-color: #20B2AA; color: white;">
+            <i class="fa-solid fa-box" style="color:white; margin-right: 8px;"></i>
+            Customer Orders Placed
+        </a>
+            </div>
+        </div>
+    </form>
+</section>
+
+
+<div class="shadow-sm small">
+    {% if customers %}
+    <table class="table table-hover table-striped" id="CustomersTable" width="100%">
+        <thead class="table-light">
+            <tr class="fs-6">
+                <th class="text-center" style="width:20%">Customer</th>
+                <th class="ps-1" style="width:15%">Contact</th>
+                <th class="text-center" style="width:30%">Address</th>
+                <th class="" style="">City</th>
+                <th class="px-2" style="width:15%">Postal Code</th>
+                <th class="px-2" style="">Country</th>
+                <th class="text-center" style="">View User</th>
+                <th class="text-center" style="">Edit</th>
+                <th class="text-center" style="">Delete</th>
+                <th class="text-center" style="">Status</th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for customer in customers %}
+            <tr>
+                <td>{{ customer.customer_name }}</td>
+                <td>{{ customer.contact_name }}</td>
+                <td>{{ customer.address }}</td>
+                <td>{{ customer.city }}</td>
+                <td>{{ customer.postal_code }}</td>
+                <td>{{ customer.country }}</td>
+                <td title="View User" class="text-center">
+                    <a href="{% url 'DjTraders.CustomerDetail' pk=customer.customer_id %}" class="text-success">
+                        <i class="fa-solid fa-house-user fa-lg" style="margin-top: 4px;"></i>
+                    </a>
+                </td>
+                <td title="Edit User" class="text-center">
+                    <a href="{% url 'DjTraders.CustomerEdit' pk=customer.customer_id %}" class="text-info">
+                        <i class="fa-solid fa-user-pen fa-lg" style="margin-top: 4px;"></i>
+                    </a>
+                </td>
+                <td title="Delete User" class="text-center">
+                    <a href="{% url 'DjTraders.CustomerDelete' pk=customer.customer_id %}" class="text-danger">
+                        <i class="fa-solid fa-user-xmark fa-lg" style="margin-top: 4px;"></i>
+                    </a>
+                </td>
+                <td class="text-center">{{ customer.is_active }}</td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        No Customers Found
+    </div>
+    {% endif %}
+</div>
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="pagination d-flex justify-content-end mt-3">
+    <div class="fw-bolder">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a class="btn btn-light" title="First" href="?page=1">
+                <i class="fa-solid fa-backward-step"></i>
+            </a>
+            <a class="btn btn-light" title="Previous" href="?page={{ page_obj.previous_page_number }}">
+                <i class="fa-solid fa-caret-left"></i>
+            </a>
+            {% endif %}
+
+            <span class="current btn btn-light disabled">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a class="btn btn-light" title="Next" href="?page={{ page_obj.next_page_number }}">
+                <i class="fa-solid fa-caret-right"></i>
+            </a>
+            <a class="btn btn-light" title="Last" href="?page={{ page_obj.paginator.num_pages }}">
+                <i class="fa-solid fa-forward-step"></i>
+            </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endif %}
+
+<!-- Added -->
+<script type="text/javascript">
+$(document).ready(function() {
+    MakeDataTable('CustomersTable');
+});
+function resetingForm() {
+    document.getElementById('srchCustomerName').value = '';
+    document.getElementById('srchContactName').value = '';
+    document.getElementById('srchCity').selectedIndex = 0;
+    document.getElementById('srchCountry').selectedIndex = 0;
+    document.getElementById('searchForm').submit();
+}
+</script>
+
+{% endblock %}

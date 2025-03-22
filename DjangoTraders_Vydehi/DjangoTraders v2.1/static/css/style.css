@@ -1,0 +1,13 @@
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+
+ul.errorlist{
+	display: none;
+}
+
+.selectedTab {
+    background-color: lightsteelblue;
+    border: 1px solid lightgray;
+    box-shadow:black;
+}

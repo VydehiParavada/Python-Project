@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<br>
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h3 class="font-weight-bold text-primary">Edit Product</h3>
+    </div>
+
+
+<div class="container">
+    <div class="card shadow-lg border-light">
+        <div class="card-body">
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    {{ form|crispy }}
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-primary mt-3">
+                        <i class="fa-regular fa-floppy-disk"></i>
+                        Save
+                    </button>
+                    <a class="btn btn-secondary mt-3" href="{% url 'DjTraders.Products' %}">
+                        <i class="fa-solid fa-xmark"></i>
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if form.errors %}
+        <div class="alert alert-danger mt-4">
+            <strong>Below are the errors preventing form submission:</strong><br>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <div>{{ field.label }}: {{ error }}</div>
+                {% endfor %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+<style>
+    
+    .card {
+        border-radius: 0.75rem; 
+    }
+
+    .btn {
+        transition: background-color 0.3s, transform 0.2s; 
+        padding: 10px 20px; 
+    }
+
+    .btn-primary {
+        background-color: #007bff; 
+        border-color: #007bff; 
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3; 
+        transform: translateY(-2px); 
+    }
+
+    .btn-secondary {
+        background-color: #6c757d; 
+        border-color: #6c757d; 
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        transform: translateY(-2px); 
+    }
+
+    .alert {
+        border-radius: 0.5rem;
+    }
+</style>
+
+{% endblock %}

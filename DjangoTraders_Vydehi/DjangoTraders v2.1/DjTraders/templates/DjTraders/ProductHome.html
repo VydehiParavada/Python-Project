@@ -1,0 +1,72 @@
+{% block content %}
+
+<div class="container shadow-sm mb-4 p-4">
+   
+    <div class="row mb-4 justify-content-center">
+        <div class="col-lg-8">
+            <table class="table table-hover table-striped text-center" id="ProductsTable" width="100%">
+                <thead class="table-light bg-primary">
+                    <tr class="fs-5">
+                        <th class="ps-3">Product Name</th>
+                        <th class="ps-3">Category</th>
+                        <th class="ps-3">Product Price</th>
+                        <th class="ps-3">Unit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{ product.product_name }}</td>
+                        <td>{{ product.category.category_name }}</td>
+                        <td>${{ product.price|floatformat:2 }}</td>
+                        <td>{{ product.unit }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    
+    <div class="card border-info mb-3 shadow-sm">
+        <div class="card-header bg-secondary text-white text-center">
+            <h5 class="mb-0">Purchased By</h5>
+        </div>
+        <div class="card-body">
+            {% for productCustomer in product.PurchasedBy %}
+            <div class="card mb-3 border-warning">
+                <div class="card-header bg-success text-white">
+                    <h6 class="mb-0">{{ forloop.counter }}. {{ productCustomer.customer_name }}</h6>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <tr>
+                                <th class="text-left" style="width: 25%;">Customer Name</th>
+                                <td>{{ productCustomer.customer_name }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left">Contact Name</th>
+                                <td>{{ productCustomer.contact_name }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left">Country</th>
+                                <td>{{ productCustomer.country }}</td>
+                            </tr>
+                            <tr>
+                                <th class="text-left">City</th>
+                                <td>{{ productCustomer.city }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        <a href="{% url 'DjTraders.CustomerDetail' pk=productCustomer.customer_id %}" class="btn" style="background-color: #8B4513; color: white;" title="View Customer Details">
+                            <i class="fa-solid fa-eye fa-lg"></i> <span>View Details</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card my-4 shadow">
+    <div class="card-header py-4 text-white bg-info custom-header">
+        <h5 class="mb-0">{{ customer }} Product Details</h5>
+    </div>
+
+    <div class="card-body border-0 custom-body">
+        <div class="row">
+            <div class="col-md-5">
+                <h2 class="mb-4">Product Information</h2>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td class="text-center"><strong>Product  :</strong></td>
+                            <td>{{ product.product_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><strong>Category  :</strong></td>
+                            <td>{{ product.category.category_name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><strong>Price  :</strong></td>
+                            <td>{{ product.price }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-center"><strong>Unit  :</strong></td>
+                            <td>{{ product.unit }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-7">
+                <h5 class="mb-4">Customer Purchase Details:</h5>
+                <table class="table table-hover" id="PurchaseTable">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Customer</th>
+                            <th>Number of Orders</th>
+                            <th>Total Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for purchase in purchase_summary %}
+                        <tr>
+                            <td>{{ purchase.order__customer__customer_name }}</td>
+                            <td>{{ purchase.total_orders }}</td>
+                            <td>{{ purchase.total_quantity }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center">No customers have purchased this product.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-end p-3">
+        <a class="btn btn-outline-secondary" href="{% url 'DjTraders.Products' %}" style="border-radius: 5px;">
+            <i class="fa-solid fa-arrow-left" style="color: darkviolet;"></i>
+            <span style="color: darkviolet;"> Back</span>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,170 @@
+<!-- tell the page to "use" the base template -->
+{% extends "base.html" %}
+
+<!-- define the block content to be injected -->
+
+{% block content %}
+
+<section id="SearchBar" class="small px-2 rounded-2 shadow" style="background-color: #e0f2f1;">
+    <form action="{% url 'DjTraders.Products' %}">
+        <div class="navbar py-4">
+            <div class="nav">
+                <h5 class="ps-2 py-1">
+                    <i class="fa-solid fa-filter fa-lg pt-2" style="color: purple;"></i>
+                    Search Products By: {{ srchProductName }} {{ srchCategory }} {{ srchPrice }}
+                </h5>
+            </div>
+            <div class="row align-items-center">
+                <div class="col-md-3 mb-2">
+                    <label style="font-weight: bold;">Product Name</label>
+                    <input type="search" name="ProductName" class="form-control form-control-sm" placeholder="Enter the Product Name" value="{{ ProductName }}">
+                </div>
+                <div class="col-md-3 mb-2">
+                    <label style="font-weight: bold;">Category</label>
+                    <select name="srchCategory" id="srchCategory" class="form-select form-select-sm" onchange="this.form.submit()"> 
+                        <option value="">Select Category</option>
+                        {% for category in Categories %}
+                            <option value="{{ category.category_name }}" {% if category.category_name == srchCategory %}selected="selected"{% endif %}>
+                                {{ category.category_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-3 mb-2 d-flex align-items-end">
+                    <div class="me-2">
+                        <label style="font-weight: bold;">Price Range</label>
+                        <select name="PriceOperator" id="PriceOperator" class="form-select form-select-sm">
+                            <option value="">Select</option>
+                            <option value="gte" {% if request.GET.PriceOperator == 'gte' %}selected{% endif %}>Greater than or equal to</option>
+                            <option value="lte" {% if request.GET.PriceOperator == 'lte' %}selected{% endif %}>Less than or equal to</option>
+                            <option value="equal" {% if request.GET.PriceOperator == 'equal' %}selected{% endif %}>Equal to</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-weight: bold;">Product Price</label>
+                        <input type="search" name="Price" class="form-control form-control-sm" placeholder="Enter Price" value="{{ Price }}">
+                    </div>
+                </div>
+                <div class="col-auto mb-2 d-flex align-items-end"> 
+                    <button class="btn btn-primary btn-sm mx-1" type="submit">
+                        <i class="fa-solid fa-magnifying-glass p-1"></i>
+                        Search
+                    </button>
+                    <button class="btn btn-outline-secondary btn-sm mx-1" type="" onclick="resetingForm()">
+                        <i class="fa-solid fa-rotate" style="color: forestgreen"></i>
+                        Reset
+                    </button>
+                </div>
+                
+            </div>
+        </div>
+        
+    </form>
+</section>
+
+
+
+<div class="container shadow-sm small my-4">
+    {% if products %}
+    <table class="table table-hover table-striped" id="ProductsTable" width="100%">
+        <thead class="table-light">
+            <tr class="fs-6 text-center">
+                <th class="ps-1">Product Name</th>
+                <th class="ps-1">Category</th>
+                <th class="ps-1">Product Price</th>
+                <th class="">Unit</th>
+                <th class="">View Details</th>
+                <th class="">Edit</th>
+                <th class="">Delete</th>
+                <th class="">Purchase Summary</th>
+                <th class="">Availability</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.product_name }}</td>
+                <td>{{ product.category.category_name }}</td>
+                <td>${{ product.price|floatformat:2 }}</td>
+                <td>{{ product.unit }}</td>
+                <td class="text-center" title="Click to see details">
+                    <a href="{% url 'DjTraders.ProductDetail' pk=product.product_id %}" class="text-success">
+                        <i class="fa-solid fa-eye fa-lg" style="margin-top: 4px;"></i>
+                    </a>
+                </td>
+                <td class="text-center" title="Edit Product">
+                    <a href="{% url 'DjTraders.ProductEdit' pk=product.product_id %}" class="text-info">
+                        <i class="fa-solid fa-pen fa-lg" style="margin-top: 4px;"></i>
+                    </a>
+                </td>
+                <td class="text-center" title="Delete Product">
+                    <a href="{% url 'DjTraders.ProductDelete' pk=product.product_id %}" class="text-danger">
+                        <i class="fa-solid fa-trash-alt fa-lg" style="margin-top: 4px;"></i>
+                    </a>
+                </td>
+                <td class="text-center" title="Purchase Summary">
+                    <a href="{% url 'DjTraders.ProdsPurchased' pk=product.product_id %}" class="text-darkviolet">
+                        <i class="fa-solid fa-file-alt fa-lg" style="margin-top: 4px;"></i>
+                    </a>
+                </td>
+                <td class="text-center">{{ product.get_availabilityStatus }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+        No Products Found
+    </div>
+    {% endif %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<div class="pagination d-flex justify-content-end mt-3">
+    <div class="fw-bolder">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a class="btn btn-light" title="First" href="?page=1">
+                <i class="fa-solid fa-backward-step"></i>
+            </a>
+            <a class="btn btn-light" title="Previous" href="?page={{ page_obj.previous_page_number }}">
+                <i class="fa-solid fa-caret-left"></i>
+            </a>
+            {% endif %}
+
+            <span class="current btn btn-light disabled">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+            <a class="btn btn-light" title="Next" href="?page={{ page_obj.next_page_number }}">
+                <i class="fa-solid fa-caret-right"></i>
+            </a>
+            <a class="btn btn-light" title="Last" href="?page={{ page_obj.paginator.num_pages }}">
+                <i class="fa-solid fa-forward-step"></i>
+            </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endif %}
+
+<!-- Added -->
+<script type="text/javascript">
+$(document).ready(function() {
+    MakeDataTable('ProductsTable');
+});
+
+function resetingForm() {
+    const searchFields = document.querySelectorAll('input[type="search"]');
+    searchFields.forEach(field => field.value = '');
+
+    const dropdowns = document.querySelectorAll('select');
+    dropdowns.forEach(dropdown => dropdown.selectedIndex = 0);
+}
+
+document.getElementById('reset').addEventListener('click', resetingForm);
+</script>
+
+{% endblock %}

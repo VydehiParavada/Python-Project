@@ -1,0 +1,359 @@
+<!-- tell the page to "use" the base template -->
+{% extends "base.html" %}
+
+<!-- define the block content to be injected -->
+
+{% block content %}
+
+
+<div class="card my-4 border-0">
+	<div class="card-header py-2 my-2">
+		<h4>
+			{{customer.customer_name}}
+		</h4>
+	</div>
+
+	<!-- 
+		v3.1 Added navbar Navigation for individual partials.
+	-->
+	<div>
+		<ul class="nav nav-tabs">
+			<li class="nav-item" style="cursor:pointer" onclick="ShowHomeTab();">
+				<a class="nav-link active" id="CustomerHomeTab">
+					<i class="fas fa-home"></i> Home
+				</a>
+			</li>
+		
+			<li class="nav-item" style="cursor:pointer" onclick="GetOrdersPlaced();">
+				<a class="nav-link" id="OrdersPlacedTab">
+					<i class="fas fa-tachometer-alt"></i> Dashboard [1.A]
+				</a>
+			</li>
+		
+			<li class="nav-item" style="cursor:pointer" onclick="GetOrdersByDate();">
+				<a class="nav-link" id="OrdersByDateTab">
+					<i class="fas fa-calendar-day"></i> Customer Annual Sales [1.B]
+				</a>
+			</li>
+		
+			<li class="nav-item" style="cursor:pointer" onclick="GetOrdersByProduct()">
+				<a class="nav-link" id="ProductsTab">
+					<i class="fas fa-cogs"></i> Top Products [1.C]
+				</a>
+			</li>
+		
+			<li class="nav-item" style="cursor:pointer" onclick="GetOrdersByCategory()">
+				<a class="nav-link" id="CategoriesTab">
+					<i class="fas fa-th-large"></i> Top Categories [1.D]
+				</a>
+			</li>
+		</ul>
+		
+		
+	</div>
+
+
+
+	<div class="container card-body border-0" id="CustomerHome">
+		<div class="row row-cols-2" id="">
+			<div class="col-7">
+				<h6 class="">
+				  Orders Placed by: {{customer.customer_name}} 
+				</h6>
+
+				<div style="">
+					{{OrdersPlot|safe}}
+				</div>
+			</div>
+
+			<div class="col-5">
+				<div id="OrdersPlaced">
+					{% include 'DjTraders/_OrdersPlaced.html'%}
+			</div>
+		</div>
+
+		</div>
+	</div>
+
+	<div class="container card-body tab-content container" >
+		<div id="CustomerInformation">
+			Customer Information is Showing
+		</div>
+	</div>
+
+
+
+</div>
+
+<script type="text/javascript">
+
+	$(document).ready(function ()
+    {
+		ShowHomeTab();
+    });
+
+
+	function ShowHomeTab(){
+
+		//debugger;
+		ClearActive();
+        $('#CustomerHomeTab').addClass('selectedTab');
+		
+        $('#CustomerHome').show();
+		$('#CustomerInformation').hide();
+	}
+
+	function GetOrdersPlaced(){
+		
+		debugger;
+		ClearActive();
+        $('#OrdersPlacedTab').addClass('selectedTab');
+
+				
+
+		$.ajax({
+			
+			url: "{% url 'DjTraders.OrdersPlaced' %}",
+			data: {
+				customer_id: {{customer.customer_id}},
+			},
+
+			beforeSend: function () {
+			
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html("Retrieving results.");
+			},
+
+			success: function(result) {
+				$('#CustomerHome').hide();
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html(result);
+			},
+
+			error: function(){
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html('An Error occurred in Request: {{request}}');
+			},
+
+			complete: function(){
+				$('#CustomerInformation').show();
+			},
+
+		});
+	}
+
+
+	function GetOrdersByDate(){
+		
+		//debugger;
+		ClearActive();
+        $('#OrdersByDateTab').addClass('selectedTab');
+
+		$.ajax({
+			
+			url: "{% url 'DjTraders.OrdersByDate' %}",
+			data: {
+				customer_id: {{customer.customer_id}},
+			},
+
+			beforeSend: function () {
+			
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html("Retrieving results.");
+			},
+
+			success: function(result) {
+				$('#CustomerHome').hide();
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html(result);
+			},
+
+			error: function(){
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html('An Error occurred in Request: {{request}}');
+			},
+
+			complete: function(){
+				$('#CustomerInformation').show();
+			},
+
+		});
+	}
+
+
+	function GetOrdersByProduct(){
+		
+		//debugger;
+		ClearActive();
+        $('#ProductsTab').addClass('selectedTab');
+
+		$.ajax({
+			
+			url: "{% url 'DjTraders.OrdersByProduct' %}",
+			data: {
+				customer_id: {{customer.customer_id}},
+			},
+
+			beforeSend: function () {
+			
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html("Retrieving results.");
+			},
+
+			success: function(result) {
+				$('#CustomerHome').hide();
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html(result);
+			},
+
+			error: function(){
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html('An Error occurred in Request: {{request}}');
+			},
+
+			complete: function(){
+				$('#CustomerInformation').show();
+			},
+
+		});
+	}
+
+	function GetOrdersByCategory(){
+		
+		//debugger;
+		ClearActive();
+        $('#CategoriesTab').addClass('selectedTab');
+
+		$.ajax({
+			
+			url: "{% url 'DjTraders.OrdersByCategory' %}",
+			data: {
+				customer_id: {{customer.customer_id}},
+			},
+
+			beforeSend: function () {
+			
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html("Retrieving results.");
+			},
+
+			success: function(result) {
+				$('#CustomerHome').hide();
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html(result);
+			},
+
+			error: function(){
+				$('#CustomerInformation').empty();
+				$('#CustomerInformation').html('An Error occurred in Request: {{request}}');
+			},
+
+			complete: function(){
+				$('#CustomerInformation').show();
+			},
+
+		});
+	}
+
+
+</script>
+
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        .nav-tabs {
+            margin: 30px 0;
+            padding: 0;
+            list-style: none;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center; 
+            flex-wrap: nowrap;
+            background-color: #e6e6fa;
+            border-radius: 10px; 
+            padding: 10px 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }        
+        .nav-item {
+            margin: 0 8px; 
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+       
+        .nav-link {
+            color: #9e2a2f; 
+            background-color: #f4cccc; 
+            padding: 10px 24px; 
+            font-size: 15px; 
+            font-weight: bold; 
+            font-family: 'Poppins', sans-serif; 
+            border-radius: 25px; 
+            display: inline-block;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent; 
+            min-width: 160px;
+        }
+        
+     
+        .nav-link:hover {
+            background-color: #d8a1a1; 
+            color: #fff; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-color: #d8a1a1;
+        }
+        
+        .nav-link.active {
+            background-color: #9e2a2f;
+            color: white; 
+            font-weight: bold;
+            border-radius: 25px; 
+            border-color: #800000;
+        }
+        
+        .nav-link.active:hover {
+            background-color: #800000;
+        }
+        
+        .nav-link:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.6);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        
+            .nav-item {
+                margin-bottom: 10px;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Ensure icons and text are aligned in one line */
+        .nav-link {
+            display: flex;               
+            align-items: center;         
+        }
+
+        .nav-link i {
+            margin-right: 8px;           
+            font-size: 18px;            
+        }
+    </style>
+</head>
+
+
+{% endblock %}
+

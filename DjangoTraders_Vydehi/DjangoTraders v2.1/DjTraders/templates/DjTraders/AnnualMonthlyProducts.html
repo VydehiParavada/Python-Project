@@ -1,0 +1,98 @@
+{% block content %}
+ 
+ 
+<div id="ProductSales">
+    <div class="navbar my-2 px-2 rounded shadow" style="background-color: #007bff; color: white;">
+        <h5>Annual and Monthly Sales Data for  {{ product.product_name }} </h5>
+       
+        <div class="mx-2">
+            <label for="selOrderYear" class="mx-1">Year</label>
+            <select name="selOrderYear" id="selOrderYear" class="form-select form-select-sm" onchange="refreshSalesPlots()">
+                <option value="" {% if not selOrderYear %} selected="selected" {% endif %}>All</option>
+                {% for year in OrderYears %}
+                    <option value="{{ year.Year }}" {% if year.Year == selOrderYear|add:"0" %} selected="selected" {% endif %}>
+                        {{ year.Year }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div id="AnnualySalePlot" class="plot-container" style="background-color: #b2ebf2;">
+                    {{ AnnualySalePlot|safe }}
+                </div>
+            </div>            
+            <div class="col-md-6">
+                <div id="MonthlySalePlot" class="plot-container" style="background-color: #ffcc80;">
+                    {{ MonthlySalePlot|safe }}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        body {
+            font-family: 'Arial', sans-serif; /* Modern font */
+            background-color: #f4f7fa; /* Light background for the page */
+            color: #333; /* Dark text color for readability */
+        }    
+        .container {
+            max-width: 90%;
+            margin: 0 auto;
+        }   
+        .row {
+            display: flex;
+            justify-content: space-between;
+        }   
+        .col-md-6 {
+            padding: 10px;
+        }
+        .plot-container {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Light shadow for depth */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px;
+            height: 100%;
+        }    
+        .plot-container h3 {
+            font-size: 1.5rem;
+            text-align: center;
+            color: #444;
+            margin-bottom: 15px;
+        }    
+        .plot-container p {
+            font-size: 1rem;
+            text-align: center;
+            color: #666;
+        }
+        @media (max-width: 768px) {
+            .col-md-6 {
+                flex: 1 1 50%; 
+                max-width: 50%;
+            }
+        }
+    </style>
+    
+</div>
+ 
+<script type="text/javascript">
+    function refreshSalesPlots() {
+        const selOrderYear = $('#selOrderYear').val();
+        $.ajax({
+            url: "{% url 'DjTraders.AnnualMonthlyProducts' pk=product.product_id %}",
+            data: { selOrderYear: selOrderYear },
+            beforeSend: function () {
+                $('#ProductSales').html("Loading updated plots...");
+            },
+            success: function (result) {
+                $('#ProductSales').html(result);
+            },
+            error: function () {
+                alert('Error updating sales plots.');
+            }
+        });
+    }
+</script>
+ 
+{% endblock %}

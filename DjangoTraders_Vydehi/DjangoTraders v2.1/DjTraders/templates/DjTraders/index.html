@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+    .card {
+        height: 300px;
+        background-size: cover; 
+        background-position: center; 
+        color: white; 
+        position: relative; 
+        overflow: hidden; 
+    }
+    .bg-home {
+        background-image: url('/static/images/home-background.jpg');
+    }
+    .bg-customers {
+        background-image: url('/static/images/customers-background.jpg');
+    }
+    .bg-products {
+        background-image: url('/static/images/products-background.jpg');
+    }
+    .card-header {
+        font-size: 1.5rem; 
+        background-color: rgba(0, 0, 0, 0.5); 
+    }
+    .card-body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card-footer {
+        background-color: rgba(0, 0, 0, 0.7); 
+        position: absolute;
+        bottom: 0; 
+        left: 0;
+        right: 0;
+        padding: 10px; 
+    }
+    .btn {
+        width: 100%; 
+        padding: 10px; 
+        font-size: 1.2rem; 
+        border-radius: 5px; 
+        color: white; 
+    }
+    .btn-home {
+        background-color: #20c997; 
+    }
+    .btn-customers {
+        background-color: #28a745; 
+    }
+    .btn-products {
+        background-color: #17a2b8; 
+    }
+    .btn:hover {
+        opacity: 0.8; 
+    }
+</style>
+
+<div class="container my-4">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <div class="card text-center shadow-sm bg-home">
+                <div class="card-header">
+                    <h5 class="mb-0">Home</h5>
+                </div>
+                <div class="card-body">
+                    
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'DjTraders.Home' %}" class="btn btn-home" title="Go to Home">
+                        <i class="fa-solid fa-house fa-lg me-1"></i> Visit Home
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card text-center shadow-sm bg-customers">
+                <div class="card-header">
+                    <h5 class="mb-0">Customers</h5>
+                </div>
+                <div class="card-body">
+                    
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'DjTraders.Customers' %}" class="btn btn-customers" title="View Customers">
+                        <i class="fa-solid fa-users fa-lg me-1"></i> View Customers
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card text-center shadow-sm bg-products">
+                <div class="card-header">
+                    <h5 class="mb-0">Products</h5>
+                </div>
+                <div class="card-body">
+                    
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'DjTraders.Products' %}" class="btn btn-products" title="Browse Products">
+                        <i class="fa-solid fa-box fa-lg me-1"></i> Browse Products
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,139 @@
+{% block content %}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+
+<div class="container mt-5" id="AllProducts">
+    
+    <div id="SearchBar" class="navbar px-4 py-3 rounded-2 shadow-sm" style="background: linear-gradient(145deg, #d9f7f3, #a3e6e1);">
+        <div class="d-flex justify-content-between w-100">
+            <h5 class="font-weight-bold text-dark">Top and Bottom 10 Revenue for the product {{ product.product_name }}
+                {% if selOrderYear %} in {{ selOrderYear }} {% endif %}
+            </h5>
+            <div class="d-flex align-items-center">
+                <label for="selOrderYear" class="mr-2 font-weight-medium">Year</label>
+                <select name="selOrderYear" id="selOrderYear" class="form-select form-select-sm" onchange="RefreshOrdersInYearPlot()">
+                    <option value="" {% if not selOrderYear %} selected="selected" {% endif %}>All</option>
+                    {% for year in OrderYears %}
+                    <option value="{{ year.Year }}" {% if year.Year == selOrderYear|add:"0" %} selected="selected" {% endif %}>
+                        {{ year.Year }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-4 row">
+        <div class="col-lg-8 mx-auto" style="height:600px;">
+            <div class="plot-container">
+                {{ top_10_plot|safe }}
+            </div>
+        </div>
+    </div>
+    
+    <div class="my-4 row">
+        <div class="col-lg-8 mx-auto" style="height:600px;">
+            <div class="plot-container">
+                {{ bottom_10_plot|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function RefreshOrdersInYearPlot() {
+        const selOrderYear = $('#selOrderYear').val();
+        
+        $.ajax({
+            url: "{% url 'DjTraders.TopBottomProductOrders' %}",
+            data: { selOrderYear: selOrderYear },
+            beforeSend: function () {
+                $('#AllProducts').html("Retrieving results...");
+            },
+            success: function (result) {
+                $('#AllProducts').html(result);
+            },
+            error: function () {
+                $('#AllProducts').html('An error occurred while fetching data.');
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $('#selOrderYear').on('change', RefreshOrdersInYearPlot);
+    });
+</script>
+
+{% endblock %}
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif; 
+        background-color: #d9f7f3; 
+        color: #333; 
+        margin: 0; 
+        padding: 0;
+    }
+
+    .container {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    #SearchBar {
+        background: linear-gradient(145deg, #d9f7f3, #a3e6e1); 
+        padding: 20px; 
+        border-radius: 10px; 
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
+    }
+
+    .row {
+        display: flex;
+        justify-content: center; 
+    }
+
+    .plot-container {
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        border-radius: 8px; 
+        padding: 20px;
+        height: 100%;
+        border: 2px solid #4CAF50; 
+    }
+
+    .plot-container h3 {
+        font-size: 1.5rem;
+        text-align: center;
+        color: #444;
+        margin-bottom: 15px;
+    }
+
+    .plot-container p {
+        font-size: 1rem;
+        text-align: center;
+        color: #666;
+    }
+
+    label {
+        color: #555;
+        font-weight: 500;
+    }
+
+    .my-4 {
+        margin-top: 2rem !important;
+        margin-bottom: 2rem !important;
+    }
+
+    .font-weight-medium {
+        font-weight: 400;
+    }
+
+    @media (max-width: 768px) {
+        .col-lg-8 {
+            width: 100%;
+        }
+    }
+</style>

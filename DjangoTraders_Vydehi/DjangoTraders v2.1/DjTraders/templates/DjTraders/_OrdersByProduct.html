@@ -1,0 +1,74 @@
+{% block content %}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+
+<div class="container my-4" id="AllOrdersByProduct">
+    
+
+    <div class="text-center mb-4" style="background-color: #4CAF50; padding: 10px 0; border-radius: 8px;">
+        <h5 class="font-weight-bold" style="font-size: 1.6rem; color: white;">
+            {{ customer }} Product Purchased
+        </h5>
+    </div>
+
+    <div id="ProductsPlot" style="height: 600px; background-color: #f1f8ff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); margin-bottom: 20px; display: flex; justify-content: center; align-items: center;">
+        {{ ProductsRevenuePlot|safe }}
+    </div>
+
+    <div id="ProductsPlot" style="height: 600px; background-color: #e7f9f3; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); display: flex; justify-content: center; align-items: center;">
+        {{ ProductsPlot|safe }}
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        
+    });
+</script>
+
+<style>
+   
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f7f9fb; 
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 95%; 
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+
+    #AllOrdersByProduct h5 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        color: white; 
+        margin-bottom: 30px; 
+    }
+
+    #ProductsPlot {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        background-color: #f1f8ff; 
+        padding: 20px;
+        margin-bottom: 30px; 
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #ProductsPlot:nth-of-type(2) {
+        background-color: #e7f9f3;
+    }
+
+</style>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% block content %}
+
+<div id="Orders" class="container mt-4">
+    <h5 class="text-center text-primary">
+        <strong>{{ customer }} placed {{ customer.NumberOfOrders }} Orders</strong>
+    </h5>
+
+    <div class="orders-list">
+        {% for order in customer.CustomerOrders %}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h6 class="mb-0">Order ID: {{ order.order_id }} - Placed on {{ order.order_date }}</h6>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Product Name</th>
+                            <th>Qty</th>
+                            <th class="text-end pe-2">Price</th>
+                            <th class="text-end pe-2">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for anOrderDetail in order.AllOrderDetails %}
+                        <tr>
+                            <td>{{ anOrderDetail.product.product_name }}</td>
+                            <td>{{ anOrderDetail.quantity }}</td>
+                            <td class="text-end pe-1">${{ anOrderDetail.product.price|floatformat:2 }}</td>
+                            <td class="text-end pe-1">${{ anOrderDetail.Total|floatformat:2 }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end pe-2"><strong>Order Total</strong></td>
+                            <td class="text-end pe-2"><strong>${{ order.OrderTotal|floatformat:2 }}</strong></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

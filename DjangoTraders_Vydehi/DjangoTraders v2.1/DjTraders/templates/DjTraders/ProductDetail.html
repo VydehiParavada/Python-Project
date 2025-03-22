@@ -1,0 +1,361 @@
+
+{% extends "base.html" %}
+
+{% block content %}
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ product.name }}  Product Detail</title>
+</head>
+<div>
+    <ul class="nav nav-tabs custom-nav-tabs">
+        <li class="nav-item" style="cursor:pointer" onclick="GetProductDetails()">
+            <a class="nav-link" id="ProductDetailsTab">
+                <i class="fas fa-box-open"></i> Product Details Home
+            </a>
+        </li>
+        <li class="nav-item" style="cursor:pointer" onclick="GetAnnualMonthlyProdAnalysis()">
+            <a class="nav-link" id="AnnualManualSalesTab" data-bs-toggle="tab">
+                <i class="fas fa-calendar-alt"></i> Annual Monthly Products Analysis [2.A]
+            </a>
+        </li>
+        <li class="nav-item" style="cursor:pointer" onclick="GetTopBottomProductOrders()">
+            <a class="nav-link" id="TopBottomTab" data-bs-toggle="tab">
+                <i class="fas fa-arrow-up"></i> Top/Bottom Products Analysis [2.B]
+            </a>
+        </li>
+        <li class="nav-item" style="cursor:pointer" onclick="GetProductSalesAnalysis()">
+            <a class="nav-link" id="ProductsTab" data-bs-toggle="tab">
+                <i class="fas fa-chart-line"></i> Product Sales Analysis [2.C]
+            </a>
+        </li>
+        <li class="nav-item" style="cursor:pointer" onclick="GetCategorySalesAnalysis()">
+            <a class="nav-link" id="CategoryTab" data-bs-toggle="tab">
+                <i class="fas fa-th-large"></i> Category Sales Analysis [2.D]
+            </a>
+        </li>
+    </ul>
+    
+    
+
+</div>
+
+<div class="container card-body tab-content container" >
+    <div id="ProductInformation">
+        Product Information is Showing
+    </div>
+</div>
+</body>
+
+<div class="card my-4">
+    <div class="card-header h6 py-4 d-flex justify-content-between align-items-center">
+        <span>{{ customer }} Product - {{ customer.NumberOfOrders }} Details</span>
+        <a class="btn btn-outline-secondary" href="{% url 'DjTraders.Products' %}" style="border-radius: 5px;">
+            <i class="fa-solid fa-arrow-left" style="color: darkviolet;"></i>
+            <span style="color: darkviolet;"> Back</span>
+        </a>
+    </div>
+ 
+</div>
+
+ {% comment %} Assgn 3 home  {% endcomment %}   
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        GetProductDetails();
+    });
+
+   
+    function ShowProductDetailsTab() {
+        ClearActive();
+        $('#ProductDetailsTab').addClass('selectedTab');
+        $('#ProductInformation').show();
+    }
+
+    function ClearActive() {
+        $('.nav-link').removeClass('selectedTab');
+    }
+
+    function GetProductDetails(){
+		
+		debugger;
+		ClearActive();
+        $('#ProductDetailsTab').addClass('selectedTab');
+
+				
+
+		$.ajax({
+			
+			url: "{% url 'DjTraders.GetProductDetails' %}",
+			data: {
+				product_id: {{product.product_id}},
+			},
+
+			beforeSend: function () {
+			
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html("Retrieving results.");
+			},
+
+			success: function(result) {
+				$('#ProductHomeTab').hide();
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html(result);
+			},
+
+			error: function(){
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html('An Error occurred in Request: {{request}}');
+			},
+
+			complete: function(){
+				$('#ProductInformation').show();
+			},
+
+		});
+	}
+{% comment %} Assgn 3 2.A {% endcomment %}
+function GetAnnualMonthlyProdAnalysis() {
+    ClearActive();
+    $('#AnnualManualSalesTab').addClass('selectedTab');
+
+    var year = $('#selOrderYear').val(); 
+    var month = $('#selOrderMonth').val();
+
+    $.ajax({
+        url: "{% url 'DjTraders.AnnualMonthlyProducts' pk=product.product_id %}",
+        data: {
+            'selOrderYear': year, 
+            'selOrderMonth': month,  
+        },
+        beforeSend: function () {
+            $('#ProductInformation').empty().html("Retrieving results...");
+        },
+        success: function(result) {
+            $('#ProductInformation').empty().html(result);
+        },
+        error: function() {
+            $('#ProductInformation').empty().html('An Error occurred in Request');
+        },
+        complete: function() {
+            $('#ProductInformation').show();
+        },
+    });
+    
+}
+
+  
+	
+{% comment %} Assgn 3 2.B {% endcomment %}
+    function GetTopBottomProductOrders(){
+        ClearActive();
+        $('#TopBottomTab').addClass('selectedTab');
+ 
+		$.ajax({
+			url: "{% url 'DjTraders.TopBottomProductOrders' %}",
+			data: {
+				product_id: {{product.product_id}},
+			},
+ 
+			beforeSend: function () {
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html("Retrieving results.");
+			},
+ 
+			success: function(result) {
+
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html(result);
+			},
+ 
+			error: function(){
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html('An Error occurred in Request: {{request}}');
+			},
+ 
+			complete: function(){
+				$('#ProductInformation').show();
+			},
+ 
+		});
+    } 
+{% comment %} Assgn 3 2.C {% endcomment %}
+    function GetProductSalesAnalysis(){
+		//debugger;
+		ClearActive();
+        $('#ProductsTab').addClass('selectedTab');
+ 
+		$.ajax({
+			url: "{% url 'DjTraders.ProductSalesAnalysis' pk=product.product_id %}",
+			data: {
+				product_id: {{product.product_id}},
+			},
+ 
+			beforeSend: function () {
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html("Retrieving results.");
+			},
+ 
+			success: function(result) {
+
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html(result);
+			},
+ 
+			error: function(){
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html('An Error occurred in Request: {{request}}');
+			},
+ 
+			complete: function(){
+				$('#ProductInformation').show();
+			},
+ 
+		});
+    }
+
+    {% comment %} Assgn 3 2.D {% endcomment %}
+    function GetCategorySalesAnalysis(){
+		//debugger;
+		ClearActive();
+        $('#CategoryTab').addClass('selectedTab');
+ 
+		$.ajax({
+			url: "{% url 'DjTraders.CategorySalesAnalysis' pk=product.product_id %}",
+			data: {
+				product_id: {{product.product_id}},
+			},
+ 
+			beforeSend: function () {
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html("Retrieving results.");
+			},
+ 
+			success: function(result) {
+
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html(result);
+			},
+ 
+			error: function(){
+				$('#ProductInformation').empty();
+				$('#ProductInformation').html('An Error occurred in Request: {{request}}');
+			},
+ 
+			complete: function(){
+				$('#ProductInformation').show();
+			},
+ 
+		});
+    } 
+   
+    
+</script>
+
+<head>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+        
+        .custom-nav-tabs {
+            margin: 30px 0; 
+            padding: 0;
+            list-style: none;
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center; 
+            flex-wrap: wrap;
+            background-color: #e6e6fa; 
+            border-radius: 10px; 
+            padding: 15px 20px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+        }      
+        .nav-item {
+            margin: 0 10px;
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }        
+        .nav-link {
+            color: #2c6b2f;
+            background-color: #a1e0a1;
+            padding: 10px 24px; 
+            font-size: 16px;
+            font-weight: bold; 
+            font-family: 'Poppins', sans-serif; 
+            border-radius: 25px; 
+            text-align: center;
+            display: inline-block;
+            min-width: 160px; 
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s; 
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent; 
+        }
+    
+        .nav-link:hover {
+            background-color: #76b972; 
+            color: #fff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-color: #76b972;
+        }
+        
+        .nav-link.active {
+            background-color: #2c6b2f;
+            color: white; 
+            font-weight: bold;
+            border-radius: 25px;
+            border-color: #245e28; 
+        }
+        
+        .nav-link.active:hover {
+            background-color: #245e28;
+        }
+        
+        .nav-link:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(38, 143, 255, 0.6);
+        }
+        
+        .nav-link.active:hover {
+            background-color: #245e28;
+            color: white;
+        }
+        
+        #ProductsTab, #CategoryTab {
+            margin-top: 20px; 
+            order: 2; 
+        }
+        
+        @media (max-width: 768px) {
+            .custom-nav-tabs {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-item {
+                margin-bottom: 10px;
+                width: 100%; 
+            }
+        }
+    </style>
+</head>
+<head>
+    <style>
+       
+        .nav-link {
+            display: flex;              
+            align-items: center;         
+        }
+    
+        /* Add space between icon and text */
+        .nav-link i {
+            margin-right: 8px;  
+        }
+    </style>
+</head>
+
+
+
+ 
+{% endblock %}

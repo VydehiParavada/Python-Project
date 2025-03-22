@@ -1,0 +1,96 @@
+{% block content %}
+
+<div class="container my-4" id="AllOrdersByCategory">
+
+    <div class="text-center mb-4">
+        <h5 class="font-weight-bold text-dark title-header">
+            {{customer}} Categories of Product Sales
+        </h5>
+    </div>
+    <div class="mb-3"> 
+        <div class="plot-container" style="background-color: #e9f7ef;"> 
+            <h6 class="text-center mb-3">Category Revenue Plot</h6>
+            <div id="CategoryRevenuesPlot" style="height:600px;">
+                {{ CategoryRevenuesPlot|safe }}
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3">
+        <div class="plot-container" style="background-color: #f8d7da;">
+            <h6 class="text-center mb-3">Category Plot</h6>
+            <div id="CategoryPlot" style="height:600px;">
+                {{ CategoryPlot|safe }}
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+    });
+</script>
+
+{% endblock %}
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #f8f9fa;
+        margin: 0;
+        padding: 0;
+        color: #333;
+    }
+
+    .container {
+        max-width: 90%;
+        margin: 0 auto;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .font-weight-bold {
+        font-weight: 700;
+    }
+
+    .title-header {
+        background-color: #6c757d; 
+        color: #ffffff;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .plot-container {
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd; 
+    }
+
+    .plot-container h6 {
+        font-size: 1.1rem;
+        color: #444;
+    }
+    .mb-3 {
+        margin-bottom: 1.5rem !important; 
+    }
+
+    #CategoryRevenuesPlot, #CategoryPlot {
+        border-radius: 8px; /* Rounded corners */
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            max-width: 100%;
+        }
+
+        .plot-container {
+            padding: 15px;
+        }
+    }
+</style>
+

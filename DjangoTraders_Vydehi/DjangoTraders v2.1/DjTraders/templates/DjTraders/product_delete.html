@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container my-5">
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="card shadow-lg border-danger">
+            <h4 class="card-header text-center bg-danger text-white">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                Confirm Deletion
+                <span class="badge text-bg-warning ms-3 p-2">
+                    {{ product.product_name }} ?
+                </span>
+            </h4>
+
+            <div class="card-body text-center">
+                <p class="lead">You are about to delete the product: <strong>{{ product.product_name }}</strong>.</p>
+                <p class="text-muted">This action cannot be undone.</p>
+                <p>Are you sure you want to proceed?</p>
+            </div>
+
+            <div class="card-footer d-flex justify-content-between">
+                <input type="submit" class="btn btn-danger" value="Delete" />
+                <a class="btn btn-outline-secondary" href="{% url 'DjTraders.Products' %}">
+                    <i class="fa-solid fa-xmark"></i> Cancel 
+                </a>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

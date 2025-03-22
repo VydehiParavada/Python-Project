@@ -1,0 +1,125 @@
+{% block content %}
+
+<div class="card my-4 border-0">
+    
+    <div id="SalesAnalysis">
+        <div class="navbar my-2 px-2 rounded shadow">
+            <h5>Product Sales Analysis for {{ product.product_name }}</h5>
+            <div class="mx-2">
+                <label for="selOrderYear" class="mx-1 text-light">Year</label>
+                <select name="selOrderYear" id="selOrderYear" class="form-select form-select-sm" onchange="ProductSalesAnalysis()">
+                    <option value="" {% if not selOrderYear %} selected="selected" {% endif %}>All</option>
+                    {% for year in OrderYears %}
+                        <option value="{{ year.Year }}" {% if year.Year == selOrderYear|add:"0" %} selected="selected" {% endif %}>
+                            {{ year.Year }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6" id="ProductAnnualySalesPlot" class="plot-container">
+                {{ ProductAnnualySalesPlot|safe }}
+            </div>
+            <div class="col-md-6" id="ProductMonthlySalesPlot" class="plot-container">
+                {{ ProductMonthlySalesPlot|safe }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function ProductSalesAnalysis() {
+        const selOrderYear = $('#selOrderYear').val();
+        $.ajax({
+            url: "{% url 'DjTraders.ProductSalesAnalysis' pk=product.product_id %}",
+            data: { selOrderYear: selOrderYear },
+            beforeSend: function () {
+                $('#SalesAnalysis').html("Loading updated plots...");
+            },
+            success: function (result) {
+                $('#SalesAnalysis').html(result);
+            },
+            error: function () {
+                alert('Error updating sales plots.');
+            }
+        });
+    }
+</script>
+
+{% endblock %}
+
+<style>
+   
+    .form-select {
+        border: 1px solid #ccc;
+        font-size: 1rem;
+        background-color: #f0f0f0;
+        padding: 5px 20px;
+        width: 180px; 
+    }
+
+    .form-select-sm {
+        border-radius: 6px;
+        padding: 5px 10px;
+        background-color: #f1f1f1;
+        width: 180px;
+    }
+
+    label {
+        color: #eaf7e1; 
+        margin-right: 10px; 
+    }
+
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-header {
+        background-color: #4CAF50;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+
+    .card-header h5 {
+        color: #ffffff;
+        font-weight: bold;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #6abf69; 
+        padding: 10px;
+        border-radius: 8px;
+    }
+
+    .navbar h5 {
+        margin: 0;
+        font-size: 1.2rem;
+        color: #ffffff;
+    }
+
+    .plot-container {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    #ProductAnnualySalesPlot {
+        background-color: #d1f7c4; 
+    }
+
+    #ProductMonthlySalesPlot {
+        background-color: #c9c9f5; 
+    }
+    @media (max-width: 768px) {
+        .col-md-6 {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+    }
+</style>

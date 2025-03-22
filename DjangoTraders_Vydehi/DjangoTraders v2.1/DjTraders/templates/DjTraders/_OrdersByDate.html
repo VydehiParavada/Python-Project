@@ -1,0 +1,150 @@
+{% block content %}
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<div class="container mt-3" id="AllOrders"> 
+    <!-- Search Bar Section -->
+    <div id="SearchBar" class="navbar my-2 px-4 py-3 rounded-3 shadow-sm" style="background-color: #d1e7dd;">
+        <div class="d-flex justify-content-between align-items-center w-100">
+            <h5 class="font-weight-bold text-dark mb-0">
+                {{ customer }} Orders 
+                {% if selOrderYear %}
+                    in {{ selOrderYear }}
+                {% endif %}
+            </h5>
+
+            <div class="mx-2">
+                <span class="mx-1 text-dark font-weight-semibold">Year</span>
+                <div>
+                    <select 
+                        name="selOrderYear" id="selOrderYear"
+                        class="form-select form-select-sm"
+                        onchange="RefreshOrdersInYearPlot()">
+                        <option value="">All</option>
+                        {% for year in OrderYears %}
+                        <option 
+                            value="{{ year.Year }}"
+                            {% if year.Year == selOrderYear|add:"0" %}
+                                selected="selected"
+                            {% endif %}> 
+                            {{ year.Year }} 
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="my-4 row">
+      
+        <div class="col-md-8 col-12" id="OrdersByDatePlot" style="height:500px;">
+            <div class="plot-container p-4 rounded-3 shadow-lg" style="background-color: #fff4e6;">
+                {{ OrdersByDatePlot|safe }}
+            </div>
+        </div>
+
+  
+        <div class="col-md-4 col-12" id="AnnualOrdersPlot" style="height:500px;">
+            <div class="plot-container p-4 rounded-3 shadow-lg" style="background-color: #e6f7ff;">
+                {{ AnnualOrdersPlot|safe }}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+    function RefreshOrdersInYearPlot() {
+        var selOrderYear = $('#selOrderYear').val();
+
+        $.ajax({
+            url: "{% url 'DjTraders.OrdersByDate' %}",
+            data: {
+                customer_id: {{ customer.customer_id }},
+                selOrderYear: selOrderYear,
+            },
+            beforeSend: function () {
+                $('#AllOrders').empty();
+                $('#AllOrders').html("Retrieving results...");
+            },
+            success: function(result) {
+                $('#AllOrders').empty();
+                $('#AllOrders').html(result);
+            },
+            error: function(){
+                $('#AllOrders').empty();
+                $('#AllOrders').html('An Error occurred in Request: {{ request }}');
+            },
+            complete: function(){
+                $('#AllOrders').show();
+            },
+        });
+    }
+</script>
+
+
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f7f9fb;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 95%; 
+        margin: 0 auto;
+        padding: 1.5rem 0; 
+    }
+
+
+    #SearchBar {
+        background-color: #d1e7dd;
+        border-radius: 10px;
+    }
+    #SearchBar h5 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #333; /* Dark text */
+    }
+
+    .form-select {
+        background-color: #ffffff;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .plot-container {
+        background-color: #ffffff; 
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .row {
+        margin-top: 1.5rem;
+    }
+
+    .plot-container h5 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    #OrdersByDatePlot {
+        background-color: #fff4e6;
+    }
+
+    #AnnualOrdersPlot {
+        background-color: #e6f7ff;
+    }
+
+</style>
+
+{% endblock %}

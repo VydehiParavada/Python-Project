@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="my-4 text-center">
+    <h5 class="display-6">Edit Customer Details</h5>
+</div>
+
+<form method="POST" class="container">
+    {% csrf_token %}
+    <div class="row mb-4">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-lg border-info">
+                <div class="card-header text-white bg-info text-center">
+                    <h6 class="mb-0">Customer Information</h6>
+                </div>
+                <div class="card-body">
+                    {{ form|crispy }}
+                </div>
+                <div class="card-footer text-center">
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <i class="fa-regular fa-floppy-disk"></i> Save
+                        </button>
+                        <a class="btn btn-secondary" href="{% url 'DjTraders.Customers' %}">
+                            <i class="fa-solid fa-xmark"></i> Cancel
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+{% if form.errors %}
+    <div class="alert alert-danger mt-4">
+        <strong>Please correct the following errors:</strong><br>
+        <ul>
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<style>
+    .card {
+        border-radius: 10px;
+    }
+    .card-header {
+        border-top-left-radius: 10px; 
+        border-top-right-radius: 10px; 
+    }
+    .btn {
+        transition: background-color 0.3s, transform 0.2s;
+    }
+    .btn:hover {
+        transform: scale(1.05); 
+    }
+    .alert {
+        border-radius: 5px;
+    }
+    {% endblock %}

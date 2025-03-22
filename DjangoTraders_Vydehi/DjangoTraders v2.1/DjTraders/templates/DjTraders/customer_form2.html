@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="my-4 text-center">
+    <h5 class="display-6">Add New Customer</h5>
+</div>
+
+<form method="POST" class="container">
+    {% csrf_token %}
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-lg border-primary">
+                <div class="card-header text-white bg-primary text-center">
+                    <h6 class="mb-0">Customer Details</h6>
+                </div>
+                <div class="card-body">
+                    {{ form|crispy }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        <button type="submit" class="btn btn-success me-2">
+            <i class="fa-regular fa-floppy-disk"></i>
+            Save
+        </button>
+        <a class="btn btn-danger" href="{% url 'DjTraders.Customers' %}">
+            <i class="fa-solid fa-xmark"></i>
+            Cancel
+        </a>
+    </div>
+</form>
+
+{% if form.errors %}
+    <div class="alert alert-danger mt-5">
+        <strong>Below are the errors which are preventing from form submission:</strong><br>
+        {% for field in form %}
+            {% for error in field.errors %}
+                <div>{{ field.label }}: {{ error }}</div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% endblock %}
