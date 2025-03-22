@@ -1,2 +1,2 @@
 # Python-Project- Analyzing Customers and Products 
-An application focusing on customers and products using Python .
+Designed a CRUDL food app using Python, Django, PostgreSQL, and a responsive UI with Bootstrap and Font Awesome.
